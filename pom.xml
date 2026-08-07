@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<!--
+		Standalone build of the OData v2 engine, extracted from the Eclipse Dirigible platform
+		(see eclipse-dirigible/dirigible#6567). The Java packages are kept unchanged
+		(org.eclipse.dirigible.components.odata, org.eclipse.dirigible.engine.odata2) so existing
+		.odata artefacts, event handlers and generated projects keep working untouched.
+
+		This project inherits the platform's build configuration (formatter, license headers,
+		javadoc, per-module Java version, third-party BOMs) from dirigible-parent, and consumes the
+		platform component JARs as released artifacts via ${dirigible.version}. It therefore builds
+		only against a released platform version that already contains the HostedEngineUris SPI.
+	-->
+
+	<parent>
+		<groupId>org.eclipse.dirigible</groupId>
+		<artifactId>dirigible-parent</artifactId>
+		<version>15.0.0</version>
+		<relativePath/>
+	</parent>
+
+	<name>Dirigible - OData (extracted)</name>
+	<artifactId>dirigible-odata-extracted-parent</artifactId>
+	<version>15.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<modules>
+		<module>odata-core</module>
+		<module>odata-core-test</module>
+		<module>odata-samples-northwind</module>
+		<module>engine-odata</module>
+		<module>template-application-odata</module>
+	</modules>
+
+	<properties>
+		<!-- The released platform version this extracted engine is built and released against. -->
+		<dirigible.version>15.0.0</dirigible.version>
+
+		<!-- Olingo pin, re-declared here because the platform no longer bundles OData. -->
+		<olingo.version>3.1.4</olingo.version>
+
+		<license.header.location>${project.basedir}/licensing-header.txt</license.header.location>
+		<parent.pom.folder>${project.basedir}/</parent.pom.folder>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Apache Olingo (com.codbex fork) -->
+			<dependency>
+				<groupId>com.codbex.olingo</groupId>
+				<artifactId>olingo-odata2-lib</artifactId>
+				<version>${olingo.version}</version>
+				<type>pom</type>
+			</dependency>
+			<dependency>
+				<groupId>com.codbex.olingo</groupId>
+				<artifactId>olingo-odata2-core</artifactId>
+				<version>${olingo.version}</version>
+			</dependency>
+
+			<!-- Extracted OData modules -->
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-odata-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.eclipse.dirigible</groupId>
+				<artifactId>dirigible-odata-core-test</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+
+</project>
