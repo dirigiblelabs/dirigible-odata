@@ -18,13 +18,13 @@
 	<parent>
 		<groupId>org.eclipse.dirigible</groupId>
 		<artifactId>dirigible-parent</artifactId>
-		<version>15.0.0</version>
+		<version>14.17.0</version>
 		<relativePath/>
 	</parent>
 
 	<name>Dirigible - OData (extracted)</name>
 	<artifactId>dirigible-odata-extracted-parent</artifactId>
-	<version>15.0.0-SNAPSHOT</version>
+	<version>14.17.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 
 	<modules>
@@ -37,7 +37,7 @@
 
 	<properties>
 		<!-- The released platform version this extracted engine is built and released against. -->
-		<dirigible.version>15.0.0</dirigible.version>
+		<dirigible.version>14.17.0</dirigible.version>
 
 		<!-- Olingo pin, re-declared here because the platform no longer bundles OData. -->
 		<olingo.version>3.1.4</olingo.version>
@@ -45,6 +45,40 @@
 		<license.header.location>${project.basedir}/licensing-header.txt</license.header.location>
 		<parent.pom.folder>${project.basedir}/</parent.pom.folder>
 	</properties>
+
+	<dependencies>
+		<!--
+			Mirrors the test dependencies the platform's components parent (components/pom.xml)
+			declares for every component module. engine-odata's tests were authored against them
+			and its own pom never declared them, so they have to be reproduced here.
+		-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>org.junit.vintage</groupId>
+					<artifactId>junit-vintage-engine</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-webmvc-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-jdbc-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-data-jpa-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 
 	<dependencyManagement>
 		<dependencies>
