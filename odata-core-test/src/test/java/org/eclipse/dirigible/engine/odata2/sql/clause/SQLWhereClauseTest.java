@@ -290,6 +290,62 @@ public final class SQLWhereClauseTest {
     }
 
     /**
+     * Test length function with a literal argument.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void testLengthFunctionWithLiteral() throws Exception {
+        SQLWhereClause where = createWhereClause( //
+                "length('abc') eq 3");
+        assertEquals("LENGTH(?) = ?", where.getWhereClause());
+        assertEquals(2, where.getStatementParams()
+                             .size());
+        assertEquals("abc", where.getParamAt(0)
+                                 .getValue());
+    }
+
+    /**
+     * Test filter function to upper to lower with literal arguments.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void testFilterFunctionToUpperToLowerWithLiterals() throws Exception {
+        SQLWhereClause where = createWhereClause( //
+                "tolower('ABC') eq 'abc' and toupper('abc') eq 'ABC'");
+
+        assertParamListEquals(new String[] {"ABC", "abc", "abc", "ABC"}, where.getStatementParams());
+        assertEquals("LOWER(?) = ? AND UPPER(?) = ?", where.getWhereClause());
+    }
+
+    /**
+     * Test filter function substring of with literal arguments.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void testFilterFunctionSubstringOfWithLiterals() throws Exception {
+        SQLWhereClause where = createWhereClause("substringof('b', 'abc')");
+
+        assertParamListEquals(new String[] {"abc", "%b%"}, where.getStatementParams());
+        assertEquals("? LIKE ?", where.getWhereClause());
+    }
+
+    /**
+     * Test filter function substring of with a property.
+     *
+     * @throws Exception the exception
+     */
+    @Test
+    public void testFilterFunctionSubstringOfWithProperty() throws Exception {
+        SQLWhereClause where = createWhereClause("Status eq 'ERROR' and substringof('fl', MessageGuid)");
+
+        assertParamListEquals(new String[] {"ERROR", "%fl%"}, where.getStatementParams());
+        assertEquals("\"T0\".\"STATUS\" = ? AND \"T0\".\"MESSAGEGUID\" LIKE ?", where.getWhereClause());
+    }
+
+    /**
      * Test filter function starts with.
      *
      * @throws Exception the exception

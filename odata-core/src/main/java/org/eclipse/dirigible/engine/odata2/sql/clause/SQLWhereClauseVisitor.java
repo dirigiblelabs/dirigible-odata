@@ -202,11 +202,10 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
                         firstParameterAsString, //
                         param);
             case LENGTH:
-                writeParam(methodExpression.getParameters()
-                                           .get(0),
-                        firstParameterAsString, "%s");
                 return String.format("LENGTH(%s)", //
-                        firstParameterAsString);
+                        writeParam(methodExpression.getParameters()
+                                                   .get(0),
+                                firstParameterAsString, null));
             case CONCAT:
                 // concat(FIELD, '') and concat('',FIELD)
                 String param1 = writeParam(methodExpression.getParameters()
@@ -226,15 +225,23 @@ public class SQLWhereClauseVisitor implements ExpressionVisitor {
                                                    .get(1),
                                 secondParameterAsString, "%s%%"));
             case SUBSTRINGOF:
+                // the searched string comes first in the statement, so its parameter is written first
+                String searched = writeParam(methodExpression.getParameters()
+                                                             .get(1),
+                        secondParameterAsString, null);
                 return String.format("%s LIKE %s", //
-                        secondParameterAsString, //
+                        searched, //
                         writeParam(methodExpression.getParameters()
                                                    .get(0),
                                 firstParameterAsString, "%%%s%%"));
             case TOLOWER:
-                return String.format("LOWER(%s)", firstParameterAsString);
+                return String.format("LOWER(%s)", writeParam(methodExpression.getParameters()
+                                                                             .get(0),
+                        firstParameterAsString, null));
             case TOUPPER:
-                return String.format("UPPER(%s)", firstParameterAsString);
+                return String.format("UPPER(%s)", writeParam(methodExpression.getParameters()
+                                                                             .get(0),
+                        firstParameterAsString, null));
             default:
                 throw new RuntimeException(new ODataNotImplementedException());
         }
